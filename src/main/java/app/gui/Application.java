@@ -17,12 +17,7 @@ import javax.swing.WindowConstants;
 import api.MongoGradeDataBase;
 import app.Config;
 import entity.Grade;
-import usecase.FormTeamUseCase;
-import usecase.GetAverageGradeUseCase;
-import usecase.GetGradeUseCase;
-import usecase.JoinTeamUseCase;
-import usecase.LeaveTeamUseCase;
-import usecase.LogGradeUseCase;
+import usecase.*;
 
 /**
  * GUI class to run the GUI for the Grade App.
@@ -240,16 +235,30 @@ public class Application {
     // TODO Task 4: modify this method so that it takes in a getTopGradeUseCase
     //              Note: this will require you to update the code which calls this method.
     private static JPanel createManageTeamCard(JFrame jFrame, LeaveTeamUseCase leaveTeamUseCase,
-                                               GetAverageGradeUseCase getAverageGradeUseCase) {
+                                               GetAverageGradeUseCase getAverageGradeUseCase,
+                                               GetTopGradeUseCase getTopGradeUseCase) {
         final JPanel theCard = new JPanel();
         theCard.setLayout(new GridLayout(ROWS, COLS));
         final JTextField courseField = new JTextField(20);
         // make a separate line.
         final JButton getAverageButton = new JButton("Get Average Grade");
         // TODO Task 4: Add another button for "Get Top Grade" (check the getAverageButton for example)
+        final JButton getTopButton = new JButton("Get Top Grade");
 
         final JButton leaveTeamButton = new JButton("Leave Team");
         final JLabel resultLabel = new JLabel();
+
+        getTopButton.addActionListener(event -> {
+            final String course = courseField.getText();
+
+            try {
+                final float max = getTopGradeUseCase.getTopGrade(course);
+                JOptionPane.showMessageDialog(jFrame, "Max Grade: " + max);
+            }
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(jFrame, ex.getMessage());
+            }
+        });
 
         getAverageButton.addActionListener(event -> {
             final String course = courseField.getText();
